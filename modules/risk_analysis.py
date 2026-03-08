@@ -2,25 +2,24 @@ def analyze_risk(contract_data):
 
     risks = []
 
-    # Interest rate risk
-    if "Interest_Rate" in contract_data:
-        rate = float(contract_data["Interest_Rate"])
+    # High down payment
+    down_payment = contract_data.get("Down_Payment")
+    if down_payment and int(down_payment) > 3000:
+        risks.append("High down payment (>$3000)")
 
-        if rate > 8:
-            risks.append("High interest rate detected")
+    # Long lease
+    term = contract_data.get("Loan_Term_Months")
+    if term and int(term) > 48:
+        risks.append("Very long lease term (>48 months)")
 
-    # Monthly payment risk
-    if "Monthly_Payment" in contract_data:
-        monthly = float(contract_data["Monthly_Payment"])
+    # Low mileage limit
+    mileage = contract_data.get("Mileage_Limit")
+    if mileage and int(mileage) < 12000:
+        risks.append("Low mileage allowance (<12,000 per year)")
 
-        if monthly > 700:
-            risks.append("Monthly payment is very high")
-
-    # Long loan term
-    if "Loan_Term_Months" in contract_data:
-        term = int(contract_data["Loan_Term_Months"])
-
-        if term > 72:
-            risks.append("Loan term is unusually long")
+    # High early termination fee
+    termination = contract_data.get("Termination_Fee")
+    if termination and int(termination) > 1000:
+        risks.append("High early termination fee")
 
     return risks
