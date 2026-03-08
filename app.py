@@ -99,6 +99,7 @@ elif page == "Analyzer":
                 st.metric("Interest Rate", f"{contract_data.get('Interest_Rate','N/A')}%")
 
 
+
             vehicle_info = {}
 
             if "VIN" in contract_data:
@@ -124,10 +125,25 @@ elif page == "Analyzer":
                 st.info(f"**Manufacturer:** {vehicle_info.get('Manufacturer','N/A')}")
 
 
-            risks = analyze_risk(contract_data)
+            # -------- RISK ANALYSIS --------
+
+            risk_result = analyze_risk(contract_data)
+
+            risks = risk_result["risks"]
+            score = risk_result["score"]
+            level = risk_result["level"]
 
             st.divider()
             st.subheader("⚠ Risk Analysis")
+
+            st.metric("Contract Fairness Score", f"{score}/100")
+
+            if level == "LOW":
+                st.success(f"Risk Level: {level}")
+            elif level == "MEDIUM":
+                st.warning(f"Risk Level: {level}")
+            else:
+                st.error(f"Risk Level: {level}")
 
             if len(risks) == 0:
                 st.success("✅ No major financial risks detected.")
@@ -180,7 +196,7 @@ elif page == "About":
     • OCR-based document reading  
     • Automatic contract data extraction  
     • VIN verification using government vehicle APIs  
-    • Financial risk detection  
+    • Financial risk detection and fairness scoring  
     • AI-generated contract explanation  
     • Interactive chatbot assistant
 
