@@ -34,3 +34,6 @@ An AI-powered system that helps users understand car lease or loan agreements au
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+
+## Live Demo
+https://ai-car-lease-analyzer-egmxgwvxapv3z2ngsrtxre.streamlit.app/
