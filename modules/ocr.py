@@ -11,22 +11,26 @@ def extract_text(file):
     # If file is a PDF
     if file.type == "application/pdf":
 
+        # Try extracting selectable text first
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
                 extracted = page.extract_text()
                 if extracted:
-                    text += extracted
+                    text += extracted + "\n"
 
-        # If PDF had no selectable text (scanned document)
+        # If no text found → use OCR
         if text.strip() == "":
+            file.seek(0)
             images = convert_from_bytes(file.read())
 
             for img in images:
-                text += pytesseract.image_to_string(img)
+                img = img.convert("L")  # convert to grayscale
+                text += pytesseract.image_to_string(img, config="--psm 6")
 
     # If file is an image
     else:
         image = Image.open(file)
-        text = pytesseract.image_to_string(image)
+        image = image.convert("L")  # grayscale for better OCR
+        text = pytesseract.image_to_string(image, config="--psm 6")
 
     return text
